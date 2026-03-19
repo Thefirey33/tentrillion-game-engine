@@ -46,7 +46,9 @@ jobs:
             c_compiler: cl
             
     steps:
-      - name: Set up Homebrew
+    
+      - if: runner.os == 'macOS'
+        name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@main
 
