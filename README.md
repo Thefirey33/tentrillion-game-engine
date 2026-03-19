@@ -25,7 +25,7 @@ Firstly, you need to register all the libraries / submodules in `libs/`. They ar
 Do:
 
 ```sh
-git submodule update --init
+git submodule update --init --recursive
 ```
 
 To register the required libraries and clone them to the directory.
