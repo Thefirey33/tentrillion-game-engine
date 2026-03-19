@@ -44,6 +44,8 @@ jobs:
             c_compiler: clang
           - os: windows-latest
             c_compiler: cl
+          - os: windows-latest
+            c_compiler: clang
             
     steps:
     
@@ -59,6 +61,15 @@ jobs:
           brew install llvm
           brew reinstall gcc
 
+      - name: Set up MinGW-w64 (GCC)
+        uses: egor-tensin/setup-mingw@v1
+        with:
+          platform: x64
+      - name: Verify GCC Installation
+        run: |
+          gcc --version
+          g++ --version
+          
       - name: Checkout repository and submodules
         uses: actions/checkout@v4
         with:
