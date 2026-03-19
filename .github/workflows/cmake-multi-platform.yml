@@ -34,6 +34,10 @@ jobs:
             c_compiler: clang
             cpp_compiler: clang++
           - os: macOS-14
+            c_compiler: gcc
+            cpp_compiler: g++
+        exclude:
+          - os: macOS-14
             c_compiler: clang
             cpp_compiler: clang++
             
@@ -47,7 +51,7 @@ jobs:
         run: |
           brew update
           brew install llvm
-          brew install gcc
+          brew reinstall gcc
 
       - name: Checkout repository and submodules
         uses: actions/checkout@v4
