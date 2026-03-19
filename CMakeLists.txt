@@ -18,7 +18,7 @@ foreach(dir ${LIBRARIES})
 endforeach(dir ${LIBRARIES})
 
 # The Ten-Trillion library.
-add_library(${LIBRARY_NAME} src/lib/main.cpp)
+add_library(${LIBRARY_NAME} STATIC src/lib/main.cpp)
 target_link_libraries(${LIBRARY_NAME} SDL3::SDL3 SDL3_image::SDL3_image SDL3_mixer::SDL3_mixer)
 # The Ten-Trillion TENTEST testing executable for testing basic rendering functions.
 add_executable(${TESTING_EXECUTABLE} src/test/main.cpp)
