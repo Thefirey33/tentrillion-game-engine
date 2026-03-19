@@ -39,7 +39,7 @@ jobs:
         exclude:
           - os: windows-latest
             c_compiler: gcc
-            cpp_compiler: gcc
+            cpp_compiler: g++
 
     steps:
       - name: Set up Clang
