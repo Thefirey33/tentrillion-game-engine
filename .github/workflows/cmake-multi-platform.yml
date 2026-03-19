@@ -41,7 +41,14 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@main
-          
+
+      - name: Install Compilers on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install llvm
+          brew install gcc
+
       - name: Checkout repository and submodules
         uses: actions/checkout@v4
         with:
