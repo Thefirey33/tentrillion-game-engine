@@ -39,7 +39,7 @@ jobs:
         exclude:
           - os: macOS-14
             c_compiler: clang
-            cpp_compiler: clang++
+            cpp_compiler: clang
             
     steps:
       - name: Set up Homebrew
