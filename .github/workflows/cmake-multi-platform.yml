@@ -36,12 +36,23 @@ jobs:
           - os: windows-latest
             c_compiler: clang
             cpp_compiler: clang
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+            cpp_compiler: gcc
 
     steps:
+      - name: Set up Clang
+        uses: egor-tensin/setup-clang@v2
+        with:
+          version: latest
+          platform: x64
+          
       - name: Checkout repository and submodules
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          
 
       - name: Install dependencies on Linux.
         if: runner.os == 'linux'
