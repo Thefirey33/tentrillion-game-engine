@@ -1,8 +1,8 @@
-
+#include "tentrillion-game-engine.hpp"
 
 #include <cstdio>
 int main(int argc, const char **argv) {
-  printf("Ten-Trillion TenTest Utility\n");
-
+  TenTrillionGameEngine::TentrillionEngine *ten =
+      new TenTrillionGameEngine::TentrillionEngine();
   return 0;
 }
