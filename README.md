@@ -43,7 +43,7 @@ You can use the VSCode CMake Tools Extension, to get you quickly running and bui
 
 > ### **ATTENTION - WINDOWS USERS, IMPORTANT!**
 >
-> You will need the Microsoft Macro Assembler (ml64) to compile this project. Download it from the Visual Studio Installer. ***You are instructed to use Visual Studio's Developer Command Line for the next steps!***
+> You will need an Assembler to compile this project. A recomemnded one is NASM or Microsoft's Macro Assembler. (MASM). Otherwise, the building does not work!
 
 To build the project, do:
 
