@@ -41,6 +41,10 @@ To register the required libraries and clone them to the directory.
 
 You can use the VSCode CMake Tools Extension, to get you quickly running and building the application without hassle.
 
+> ### **ATTENTION - WINDOWS USERS, IMPORTANT!**
+>
+> You will need the Microsoft Macro Assembler (ml64) to compile this project. ***You are instructed to use Visual Studio's Developer Command Line for the next steps!***
+
 To build the project, do:
 
 ```sh
