@@ -46,6 +46,10 @@ jobs:
             c_compiler: gcc
           - os: windows-latest
             c_compiler: clang
+          - os: linux-latest
+            c_compiler: cl
+          - os: macOS-14
+            c_compiler: cl
 
     steps:
       - if: runner.os == 'macOS'
