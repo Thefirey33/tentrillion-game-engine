@@ -43,7 +43,7 @@ You can use the VSCode CMake Tools Extension, to get you quickly running and bui
 
 > ### **ATTENTION - WINDOWS USERS, IMPORTANT!**
 >
-> You will need an Assembler to compile this project. A recomemnded one is NASM or Microsoft's Macro Assembler. (MASM). Otherwise, the building does not work!
+> You will need an Assembler to compile this project. A recommended one is NASM or Microsoft's Macro Assembler. (MASM). Otherwise, the building does not work!
 
 To build the project, do:
 
