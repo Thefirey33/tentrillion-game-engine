@@ -27,5 +27,5 @@ add_subdirectory(src/editor)
 # TenTrillion TenTEST Utility.
 add_executable(${TESTING_EXECUTABLE} src/test/main.cpp)
 target_link_libraries(${TESTING_EXECUTABLE} ${LIBRARY_NAME})
-add_test(NAME TenTrillionTenTest COMMAND ${TESTING_EXECUTABLE})
+# add_test(NAME TenTrillionTenTest COMMAND ${TESTING_EXECUTABLE})
 

@@ -16,6 +16,8 @@ class TENTRILLION_GAME_ENGINE_EXPORT TenTrillionService {
   public:
 	TenTrillionService(const std::string &serviceName);
 	std::string &getServiceName();
+
+	virtual void quitService() {}
 };
 } // namespace TenTrillionGameEngine
 

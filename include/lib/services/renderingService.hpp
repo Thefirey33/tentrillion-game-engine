@@ -20,6 +20,7 @@ class TENTRILLION_GAME_ENGINE_EXPORT RenderingService
   public:
 	RenderingService(int windowWidth, int windowHeight,
 					 const char *windowTitle);
+	void quitService() override;
 };
 } // namespace TenTrillionGameEngine
 

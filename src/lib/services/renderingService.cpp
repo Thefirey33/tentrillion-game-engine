@@ -1,5 +1,6 @@
 #include "services/renderingService.hpp"
 #include "SDL3/SDL.h"
+#include "SDL3/SDL_init.h"
 #include "SDL3/SDL_log.h"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
@@ -25,4 +26,8 @@ RenderingService::RenderingService(int windowWidth, int windowHeight,
 								&this->rendererInstance);
 }
 
+void RenderingService::quitService() {
+	SDL_DestroyWindow(this->windowInstance);
+	SDL_Quit();
+}
 } // namespace TenTrillionGameEngine

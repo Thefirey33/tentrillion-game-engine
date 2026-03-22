@@ -20,6 +20,8 @@ void TentrillionEngine::init() {
 	this->windowService = std::make_unique<RenderingService>(800, 600, "Test");
 }
 
+void TentrillionEngine::quit() { this->windowService->quitService(); }
+
 void TentrillionEngine::displayInformation() {
 	printf("== tentrillion game engine ==\n");
 	printf("version: %s\n", BUILD_VERSION);
