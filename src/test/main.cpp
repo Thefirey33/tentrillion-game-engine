@@ -2,8 +2,6 @@
 #include <cstdio>
 
 int main(int argc, const char **argv) {
-	TenTrillionGameEngine::TentrillionEngine *tentrillionEngine =
-		new TenTrillionGameEngine::TentrillionEngine();
-	tentrillionEngine->init();
+	// TODO: TenTest Library Checker.
 	return 0;
 }
