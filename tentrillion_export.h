@@ -1,0 +1,43 @@
+
+#ifndef TENTRILLION_GAME_ENGINE_EXPORT_H
+#define TENTRILLION_GAME_ENGINE_EXPORT_H
+
+#ifdef TENTRILLION_GAME_ENGINE_STATIC_DEFINE
+#  define TENTRILLION_GAME_ENGINE_EXPORT
+#  define TENTRILLION_GAME_ENGINE_NO_EXPORT
+#else
+#  ifndef TENTRILLION_GAME_ENGINE_EXPORT
+#    ifdef tentrillion_game_engine_EXPORTS
+        /* We are building this library */
+#      define TENTRILLION_GAME_ENGINE_EXPORT __attribute__((visibility("default")))
+#    else
+        /* We are using this library */
+#      define TENTRILLION_GAME_ENGINE_EXPORT __attribute__((visibility("default")))
+#    endif
+#  endif
+
+#  ifndef TENTRILLION_GAME_ENGINE_NO_EXPORT
+#    define TENTRILLION_GAME_ENGINE_NO_EXPORT __attribute__((visibility("hidden")))
+#  endif
+#endif
+
+#ifndef TENTRILLION_GAME_ENGINE_DEPRECATED
+#  define TENTRILLION_GAME_ENGINE_DEPRECATED __attribute__ ((__deprecated__))
+#endif
+
+#ifndef TENTRILLION_GAME_ENGINE_DEPRECATED_EXPORT
+#  define TENTRILLION_GAME_ENGINE_DEPRECATED_EXPORT TENTRILLION_GAME_ENGINE_EXPORT TENTRILLION_GAME_ENGINE_DEPRECATED
+#endif
+
+#ifndef TENTRILLION_GAME_ENGINE_DEPRECATED_NO_EXPORT
+#  define TENTRILLION_GAME_ENGINE_DEPRECATED_NO_EXPORT TENTRILLION_GAME_ENGINE_NO_EXPORT TENTRILLION_GAME_ENGINE_DEPRECATED
+#endif
+
+/* NOLINTNEXTLINE(readability-avoid-unconditional-preprocessor-if) */
+#if 0 /* DEFINE_NO_DEPRECATED */
+#  ifndef TENTRILLION_GAME_ENGINE_NO_DEPRECATED
+#    define TENTRILLION_GAME_ENGINE_NO_DEPRECATED
+#  endif
+#endif
+
+#endif /* TENTRILLION_GAME_ENGINE_EXPORT_H */

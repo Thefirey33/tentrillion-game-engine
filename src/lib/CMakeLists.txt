@@ -6,7 +6,7 @@ find_package(Vulkan REQUIRED)
 
 # The Ten-Trillion library.
 add_library(${LIBRARY_NAME} SHARED ${ENGINE_FILES})
-generate_export_header(${LIBRARY_NAME} EXPORT_FILE_NAME "tentrillion_export.h")
+generate_export_header(${LIBRARY_NAME} EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/tentrillion_export.h")
 
 execute_process(
     COMMAND git rev-parse HEAD
