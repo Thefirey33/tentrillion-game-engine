@@ -122,3 +122,4 @@ jobs:
         with:
           name: ${{ runner.os }}-${{ matrix.c_compiler }}-${{ matrix.build_type }}
           path: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}
+          retention-days: 2
