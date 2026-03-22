@@ -1,8 +1,9 @@
-#include "tentrillion-game-engine.hpp"
-
+#include "tentrillion.hpp"
 #include <cstdio>
+
 int main(int argc, const char **argv) {
-  TenTrillionGameEngine::TentrillionEngine *ten =
-      new TenTrillionGameEngine::TentrillionEngine();
-  return 0;
+	TenTrillionGameEngine::TentrillionEngine *tentrillionEngine =
+		new TenTrillionGameEngine::TentrillionEngine();
+	tentrillionEngine->init();
+	return 0;
 }
