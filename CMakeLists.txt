@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10.0)
-project(ten-trillion VERSION 0.1.0 LANGUAGES CXX)
+set(PROJECT_NAME ten-trillion)
+project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES CXX)
 # Definitions
 set(LIBRARY_NAME tentrillion-game-engine)
 set(TESTING_EXECUTABLE tentrillion-tentest)
