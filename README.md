@@ -81,3 +81,7 @@ cd build # This will create a build directory for you to work with.
 cmake ..
 cmake --build .
 ```
+
+## License
+
+This project uses the MIT License.
