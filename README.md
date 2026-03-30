@@ -2,7 +2,8 @@
 
 This game engine is a custom specialized game engine for extensive moddability and customizing of games.
 
-The goal of the Ten-Trillion, is to provide all the optimizations that a developer manually does, directly bundled in, but still able to control the code and rendering with function calls.
+The goal of the Ten-Trillion, is to provide all the optimizations that a developer manually does, directly bundled in,
+but still able to control the code and rendering with function calls.
 
 ## Rendering Information
 
@@ -18,6 +19,7 @@ This project uses SDL3, SDL Image, SDL Mixer for it's runtime. Along with:
 - C++ 17 (for Windows users, install Visual Studio 2017 or 2019 at minimum.)
 - Git
 - Vulkan SDK
+- Qt 6
 - SDL3, SDL3 Mixer, SDL3 Image
 
 ## Getting Started
@@ -26,7 +28,17 @@ Firstly, you need to register all the libraries / submodules in `libs/`. They ar
 
 ### Vulkan Installation
 
-Vulkan is a needed dependency for the TenTrillion Game Engine, as the engine uses it to render it's graphics if your system supports it. On Windows, please go to the [Vulkan Website](https://vulkan.lunarg.com/doc/sdk) and retrieve the Vulkan SDK. Do not forget, ensure that the `VULKAN_SDK` path has been set correctly!
+Vulkan is a needed dependency for the TenTrillion Game Engine, as the engine uses it to render it's graphics if your
+system supports it. On Windows, please go to the [Vulkan Website](https://vulkan.lunarg.com/doc/sdk) and retrieve the
+Vulkan SDK. Do not forget, ensure that the `VULKAN_SDK` path has been set correctly!
+
+### Qt Installation
+
+You must also install Qt to compile the editor executable. For Windows users, you are recommended to use Qt's Installer
+to install it to your system, [Check out this here.](https://doc.qt.io/qt-6/windows.html) Other desktop environments
+can use their package managers.
+
+Linux Users can read about it, right [here.](https://doc.qt.io/qt-6/linux.html)
 
 #### Linux
 
@@ -71,7 +83,7 @@ You can use the VSCode CMake Tools Extension, to get you quickly running and bui
 
 > ### **ATTENTION - WINDOWS USERS, IMPORTANT!**
 >
-> You will need an x64 Assembly Assembler to compile this project. NASM, is the assembler of choice to use. You will need to add it to your path variable!
+> You will need an x64 Assembly Assembler to compile this project, along with Perl.
 
 To build the project, do:
 
