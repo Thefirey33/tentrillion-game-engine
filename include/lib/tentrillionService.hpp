@@ -5,17 +5,22 @@
 #include <string>
 
 namespace TenTrillionGameEngine {
+class TentrillionEngine;
 
 /**
 	The base class for the TenTrillion's Services.
 */
 class TENTRILLION_GAME_ENGINE_EXPORT TenTrillionService {
-  private:
+  protected:
+	TentrillionEngine *engine;
 	std::string serviceName;
 
   public:
-	TenTrillionService(const std::string &serviceName);
-	std::string &getServiceName();
+	virtual ~TenTrillionService() = default;
+	explicit TenTrillionService(
+		const std::string &serviceName,
+		TenTrillionGameEngine::TentrillionEngine *tentrillionEngine);
+	std::string &getServiceName() { return serviceName; }
 
 	virtual void quitService() {}
 };

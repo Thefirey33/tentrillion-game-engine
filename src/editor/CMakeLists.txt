@@ -1,2 +1,4 @@
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
+
 add_executable(${EDITOR_EXECUTABLE} main.cpp)
-target_link_libraries(${EDITOR_EXECUTABLE} PUBLIC ${LIBRARY_NAME})
+target_link_libraries(${EDITOR_EXECUTABLE} PUBLIC ${LIBRARY_NAME} Qt6::Core Qt6::Widgets)

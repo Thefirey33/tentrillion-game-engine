@@ -12,14 +12,15 @@ class TENTRILLION_GAME_ENGINE_EXPORT RenderingService
   private:
 	int windowWidth{0};
 	int windowHeight{0};
-	RenderingBackend backend;
 
 	SDL_Window *windowInstance;
 	SDL_Renderer *rendererInstance;
 
   public:
-	RenderingService(int windowWidth, int windowHeight,
-					 const char *windowTitle);
+	RenderingBackend backend;
+
+	RenderingService(int windowWidth, int windowHeight, const char *windowTitle,
+					 TenTrillionGameEngine::TentrillionEngine *engine);
 	void quitService() override;
 };
 } // namespace TenTrillionGameEngine

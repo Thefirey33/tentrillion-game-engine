@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.16.0)
 set(PROJECT_NAME ten-trillion)
 project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES CXX)
 # Definitions
@@ -12,9 +12,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
 
 file(GLOB LIBRARIES LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "libs/*")
-foreach(dir ${LIBRARIES})
+foreach (dir ${LIBRARIES})
     add_subdirectory(${dir})
-endforeach(dir ${LIBRARIES})
+endforeach (dir ${LIBRARIES})
 
 include(GenerateExportHeader)
 include(GNUInstallDirs)
@@ -27,5 +27,5 @@ add_subdirectory(src/editor)
 # TenTrillion TenTEST Utility.
 add_executable(${TESTING_EXECUTABLE} src/test/main.cpp)
 target_link_libraries(${TESTING_EXECUTABLE} ${LIBRARY_NAME})
-# add_test(NAME TenTrillionTenTest COMMAND ${TESTING_EXECUTABLE})
 
+# TODO: Add testing features for the Ten-Trillion for CTest.
