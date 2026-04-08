@@ -1,3 +1,5 @@
+
+![ten-trillion-logo](readme_sources/ten-trillion-logo.png)
 # TEN-TRILLION GAME ENGINE
 
 This game engine is a custom specialized game engine for extensive moddability and customizing of games.
