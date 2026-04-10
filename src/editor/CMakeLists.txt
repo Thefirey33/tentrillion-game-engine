@@ -21,7 +21,7 @@ target_link_libraries(${EDITOR_EXECUTABLE} PUBLIC ${LIBRARY_NAME} ${QT_LINKER_FL
 # Use windeployqt to deploy for Windows platforms.
 if (WIN32)
     add_custom_command(TARGET ${EDITOR_EXECUTABLE} POST_BUILD
-            COMMAND ${WINDEPLOYQT_EXECUTABLE} $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/${EDITOR_EXECUTABLE}.exe>
+            COMMAND ${WINDEPLOYQT_EXECUTABLE} $<BUILD_INTERFACE:${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EDITOR_EXECUTABLE}.exe>
             COMMENT "Deploying for Windows..."
     )
 endif (WIN32)
