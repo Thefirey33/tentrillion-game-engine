@@ -1,10 +1,14 @@
-file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/lib/*.cpp)
-file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/include/lib/*.hpp)
 
-set(ENGINE_FILES ${SOURCE_FILES} ${HEADER_FILES})
+set(SOURCE_FILES
+        tentrillion.cpp
+        tentrillionService.cpp
+        services/renderingService.cpp
+        services/vulkanBackendManagerService.cpp
+)
+
 find_package(Vulkan REQUIRED)
 
-add_library(${LIBRARY_NAME} SHARED ${ENGINE_FILES})
+add_library(${LIBRARY_NAME} SHARED ${SOURCE_FILES})
 generate_export_header(${LIBRARY_NAME} EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/tentrillion_export.h")
 
 execute_process(
@@ -30,6 +34,7 @@ target_link_libraries(${LIBRARY_NAME}
         $<BUILD_INTERFACE:SDL3::SDL3-shared>
         $<BUILD_INTERFACE:SDL3_image::SDL3_image-shared>
         $<BUILD_INTERFACE:SDL3_mixer::SDL3_mixer-shared>
+        $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
         $<BUILD_INTERFACE:Vulkan::Vulkan>
 )
 

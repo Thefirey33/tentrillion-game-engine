@@ -13,6 +13,7 @@ set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
 
 file(GLOB LIBRARIES LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "libs/*")
 foreach (dir ${LIBRARIES})
+    message("ADDING LIBRARY: " ${dir})
     add_subdirectory(${dir})
 endforeach (dir ${LIBRARIES})
 
@@ -27,5 +28,3 @@ add_subdirectory(src/editor)
 # TenTrillion TenTEST Utility.
 add_executable(${TESTING_EXECUTABLE} src/test/main.cpp)
 target_link_libraries(${TESTING_EXECUTABLE} ${LIBRARY_NAME})
-
-# TODO: Add testing features for the Ten-Trillion for CTest.

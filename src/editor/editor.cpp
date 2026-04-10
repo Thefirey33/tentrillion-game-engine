@@ -1,12 +1,9 @@
+#include "managers/baseGuiManager.hpp"
+
 #include <QApplication>
-#include <QLabel>
 
 int main(int argc, char *argv[]) {
-	// General testing window for the Ten-Trillion.
-
 	QApplication app(argc, argv);
-	QLabel label("Testing Window.");
-
-	label.show();
+	auto baseGuiManager = std::make_unique<BaseGuiManager>(&app);
 	return QApplication::exec();
 }
