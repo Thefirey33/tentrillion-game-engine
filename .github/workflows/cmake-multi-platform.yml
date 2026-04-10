@@ -4,9 +4,9 @@ name: CMake on multiple platforms
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -23,9 +23,9 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-latest, macOS-14, windows-latest]
-        build_type: [Debug]
-        c_compiler: [gcc, clang, cl]
+        os: [ ubuntu-latest, macOS-14, windows-latest ]
+        build_type: [ Debug ]
+        c_compiler: [ gcc, clang, cl ]
         include:
           - os: ubuntu-latest
             c_compiler: gcc
@@ -57,7 +57,14 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@main
 
-      - name: Install Qt
+      - if: runner.os == 'macOS'
+        name: Install Qt for MacOS only, for ARM64 support
+        uses: jurplel/install-qt-action@v4
+        with:
+          cache: true
+
+      - if: runner.os != 'macOS'
+        name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           cache: true
