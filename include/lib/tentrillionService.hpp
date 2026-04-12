@@ -17,9 +17,8 @@ class TENTRILLION_GAME_ENGINE_EXPORT TenTrillionService {
 
   public:
 	virtual ~TenTrillionService() = default;
-	explicit TenTrillionService(
-		const std::string &serviceName,
-		TenTrillionGameEngine::TentrillionEngine *tentrillionEngine);
+	explicit TenTrillionService(const std::string &serviceName,
+								TentrillionEngine *tentrillionEngine);
 	std::string &getServiceName() { return serviceName; }
 
 	virtual void quitService() {}

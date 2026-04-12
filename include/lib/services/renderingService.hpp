@@ -3,49 +3,78 @@
 
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
-#include "services/vulkanBackendManagerService.hpp"
+#include "backends/vulkanBackendManagerService.hpp"
+#include "math/vectorMath.hpp"
 #include "tentrillionService.hpp"
+
 #include <functional>
 #include <memory>
 namespace TenTrillionGameEngine {
 
-enum RenderingBackend { OPENGL, VULKAN };
+enum RenderingBackend { OPENGL, VULKAN, SOFTWARE };
+
 class TENTRILLION_GAME_ENGINE_EXPORT RenderingService
 	: public TenTrillionService {
-	std::unique_ptr<VulkanBackendManagerService> vulkanBackendManagerService;
 
-	int windowWidth{0};
-	int windowHeight{0};
+	Vector windowSize{};
+
+  protected:
+	std::unique_ptr<TenTrillionService> renderingBackendService;
 
 	SDL_Window *windowInstance{};
 	SDL_Renderer *rendererInstance{};
 
   public:
-	// The current rendering backend being used.
+	/**
+	 *
+	 */
 	RenderingBackend backend;
 
-	/* The Initializer of the TenTrillion Rendering Service.
-	 * @param windowWidth Window Width.
-	 * @param windowHeight Window Height.
-	 * @param windowTitle Window Title.
+	/**
+	 * Initialize the Rendering Service.
+	 * @param windowSize The size of the window to set.
+	 * @param windowTitle The caption of the window.
+	 * @param engine The TenTrillionEngine reference.
 	 */
-	RenderingService(int windowWidth, int windowHeight, const char *windowTitle,
-					 TenTrillionGameEngine::TentrillionEngine *engine);
+	RenderingService(Vector windowSize, const char *windowTitle,
+					 TentrillionEngine *engine);
 
+	/**
+	 * This returns the current SDL window instance.
+	 * @return The SDL window instance.
+	 */
 	[[nodiscard]] SDL_Window *getWindowInstance() const;
 
-	/* This function only executes it's callback code on VULKAN instances.
-	 * @param callback the function to execute.
+	/**
+	 * This executes the specified callback only on a VULKAN session.
+	 * @param callback The callback to execute on a VULKAN session only.
 	 */
 	void executeOnVulkanOnly(const std::function<void()> &callback) const;
 
-	/*
-	 * This function only executes it's callback code on OPENGL instances.
-	 * @param callback the function to execute.
+	[[nodiscard]] SDL_Renderer *getRendererInstance() const;
+	void setRendererInstance(SDL_Renderer *m_rendererInstance);
+
+	/**
+	 * This executes the specified callback only on OpenGL.
+	 * @param callback The callback to execute on an OPENGL session.
 	 */
 	void executeOnOpenGlOnly(const std::function<void()> &callback) const;
 
-	// Quit the rendering instance.
+	/**
+	 * This executes the specified callback only on SOFTWARE.
+	 * @param callback The callback to execute on a SOFTWARE session.
+	 */
+	void executeOnSoftwareOnly(const std::function<void()> &callback) const;
+
+	/**
+	 * This returns the window size of the current window.
+	 * @return Window Size Vector.
+	 */
+	Vector &getWindowSize();
+
+	/**
+	 * Quit the rendering service.
+	 */
 	void quitService() override;
 };
 

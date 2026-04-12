@@ -6,7 +6,10 @@ namespace TenTrillionGameEngine {
 class TENTRILLION_GAME_ENGINE_EXPORT TextureService
 	: public TenTrillionService {
   public:
-	TextureService();
+	/**
+	 * This initializes the TenTrillion Texturing Service.
+	 */
+	explicit TextureService(TentrillionEngine *tentrillionEngine);
 };
 } // namespace TenTrillionGameEngine
 

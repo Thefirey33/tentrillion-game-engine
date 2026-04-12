@@ -1,10 +1,12 @@
-#include "services/renderingService.hpp"
+#include "renderingService.hpp"
 
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_log.h"
 #include "SDL3/SDL_video.h"
 #include "SDL3/SDL_vulkan.h"
-#include "services/vulkanBackendManagerService.hpp"
+#include "backends/openGlBackendManagerService.hpp"
+#include "backends/softwareBackendManager.hpp"
+#include "backends/vulkanBackendManagerService.hpp"
 #include "tentrillion.hpp"
 #include "tentrillionService.hpp"
 
@@ -13,30 +15,47 @@
 #include <vulkan/vulkan_core.h>
 
 namespace TenTrillionGameEngine {
-RenderingService::RenderingService(const int windowWidth,
-								   const int windowHeight,
+RenderingService::RenderingService(const Vector windowSize,
 								   const char *windowTitle,
 								   TentrillionEngine *engine)
 	: TenTrillionService("WindowService", engine) {
-	this->windowWidth = windowWidth;
-	this->windowHeight = windowHeight;
-	this->backend = VULKAN;
+	this->windowSize = windowSize;
 
-	const bool isVulkanLoaded = SDL_Vulkan_LoadLibrary(nullptr);
-	backend = isVulkanLoaded ? VULKAN : OPENGL;
+	backend = SDL_Vulkan_LoadLibrary(nullptr) ? VULKAN
+			  : SDL_GL_LoadLibrary(nullptr)	  ? OPENGL
+											  : SOFTWARE;
 
-	this->windowInstance = SDL_CreateWindow(windowTitle, SDL_WINDOWPOS_CENTERED,
-											SDL_WINDOWPOS_CENTERED,
-											(backend ? SDL_WINDOW_VULKAN : 0));
+	this->windowInstance =
+		SDL_CreateWindow(windowTitle, this->windowSize.x, this->windowSize.z,
+						 backend			 ? SDL_WINDOW_VULKAN
+						 : backend == OPENGL ? SDL_WINDOW_OPENGL
+											 : 0);
 
+	// Create the specified backend for the engine to use.
 	switch (backend) {
 	case VULKAN:
-		this->vulkanBackendManagerService =
+		this->renderingBackendService =
 			std::make_unique<VulkanBackendManagerService>(this, engine);
 		break;
 	case OPENGL:
+		this->renderingBackendService =
+			std::make_unique<OpenGlBackendManagerService>(this, engine);
+		break;
+	case SOFTWARE:
+		this->renderingBackendService =
+			std::make_unique<SoftwareBackendManager>(this, engine);
 		break;
 	}
+}
+
+Vector &RenderingService::getWindowSize() { return this->windowSize; }
+
+SDL_Renderer *RenderingService::getRendererInstance() const {
+	return rendererInstance;
+}
+
+void RenderingService::setRendererInstance(SDL_Renderer *m_rendererInstance) {
+	this->rendererInstance = m_rendererInstance;
 }
 
 SDL_Window *RenderingService::getWindowInstance() const {
@@ -52,6 +71,12 @@ void RenderingService::executeOnVulkanOnly(
 void RenderingService::executeOnOpenGlOnly(
 	const std::function<void()> &callback) const {
 	if (this->backend == OPENGL)
+		callback();
+}
+
+void RenderingService::executeOnSoftwareOnly(
+	const std::function<void()> &callback) const {
+	if (this->backend == SOFTWARE)
 		callback();
 }
 

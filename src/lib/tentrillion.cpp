@@ -15,17 +15,22 @@ TentrillionEngine::TentrillionEngine() {
 					 "Couldn't initialize SDL context.\n");
 		exit(1);
 	}
+	this->displayTenTrillionInformation();
 	tenTrillionInstance = this;
 }
 
-void TentrillionEngine::initializeInstance(const int windowWidth,
-										   const int windowHeight,
+void TentrillionEngine::initializeInstance(Vector windowSize,
 										   const char *windowTitle) {
-	this->renderingService = std::make_unique<RenderingService>(
-		windowWidth, windowHeight, windowTitle, this);
+	this->renderingService =
+		std::make_unique<RenderingService>(windowSize, windowTitle, this);
 }
 
-void TentrillionEngine::exitInstance() {}
+void TentrillionEngine::displayTenTrillionInformation() {
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "TenTrillion Build: %s\n",
+				TENTRILLION_BUILD_VERSION);
+}
+
+void TentrillionEngine::exitInstance() { SDL_Quit(); }
 
 TentrillionEngine *TentrillionEngine::getTenTrillionInstance() {
 	return tenTrillionInstance;

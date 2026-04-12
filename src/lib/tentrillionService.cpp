@@ -2,8 +2,8 @@
 
 namespace TenTrillionGameEngine {
 TenTrillionService::TenTrillionService(const std::string &serviceName,
-									   TentrillionEngine *engine) {
+									   TentrillionEngine *tentrillionEngine) {
 	this->serviceName = serviceName;
-	this->engine = engine;
+	this->engine = tentrillionEngine;
 }
 }; // namespace TenTrillionGameEngine
