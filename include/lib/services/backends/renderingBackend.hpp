@@ -19,21 +19,9 @@ struct GpuInformation {
 	 */
 	std::string gpuName;
 	/**
-	 * This is the device ID returned by VULKAN.
-	 */
-	std::uint32_t deviceId;
-	/**
-	 * This is the vendor ID specified by the GPU Vendor.
-	 */
-	std::uint32_t vendorId;
-	/**
 	 * This is the version of the current GPU driver.
 	 */
-	std::uint32_t driverVersion;
-	/**
-	 * This is the version of the current GPU API.
-	 */
-	std::uint32_t apiVersion;
+	std::string driverVersion;
 };
 
 class TENTRILLION_GAME_ENGINE_EXPORT RenderingBackendManager

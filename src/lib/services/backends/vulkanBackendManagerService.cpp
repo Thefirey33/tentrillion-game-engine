@@ -34,18 +34,15 @@ std::vector<TenTrillionGameEngine::GpuInformation> TenTrillionGameEngine::
 							   physicalDevices.data());
 	// Retrieve the current GPU information by querying the information provided
 	// by vulkan.
-	std::for_each(physicalDevices.begin(), physicalDevices.end(),
-				  [&](const VkPhysicalDevice &device) {
-					  VkPhysicalDeviceProperties physicalDeviceProperties;
-					  vkGetPhysicalDeviceProperties(device,
-													&physicalDeviceProperties);
-					  availableGpuInformation.push_back(
-						  {physicalDeviceProperties.deviceName,
-						   physicalDeviceProperties.deviceID,
-						   physicalDeviceProperties.vendorID,
-						   physicalDeviceProperties.driverVersion,
-						   physicalDeviceProperties.apiVersion});
-				  });
+	std::for_each(
+		physicalDevices.begin(), physicalDevices.end(),
+		[&](const VkPhysicalDevice &device) {
+			VkPhysicalDeviceProperties physicalDeviceProperties;
+			vkGetPhysicalDeviceProperties(device, &physicalDeviceProperties);
+			availableGpuInformation.push_back(
+				{physicalDeviceProperties.deviceName,
+				 std::to_string(physicalDeviceProperties.driverVersion)});
+		});
 
 	return availableGpuInformation;
 }
@@ -64,42 +61,38 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 		return;
 	}
 
-	renderingService->executeOnVulkanOnly([&] {
-		VkInstanceCreateInfo vkInstanceCreateInfo = {};
-		vkInstanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		vkInstanceCreateInfo.enabledExtensionCount =
-			this->vkInstanceExtensionsCount;
-		vkInstanceCreateInfo.ppEnabledExtensionNames = vkInstanceExtensions;
+	VkInstanceCreateInfo vkInstanceCreateInfo = {};
+	vkInstanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	vkInstanceCreateInfo.enabledExtensionCount =
+		this->vkInstanceExtensionsCount;
+	vkInstanceCreateInfo.ppEnabledExtensionNames = vkInstanceExtensions;
 
-		// Attempt to create a vulkan instance, if failure, report the error to
-		// the user and force switch back to the OpenGL runtime.
-		if (vkCreateInstance(&vkInstanceCreateInfo, nullptr,
-							 &this->vkInstance) != VK_SUCCESS) {
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-						 "Failed to create Vulkan instance\n");
-			renderingService->backend = OPENGL;
-		}
+	// Attempt to create a vulkan instance, if failure, report the error to
+	// the user and force switch back to the OpenGL runtime.
+	if (vkCreateInstance(&vkInstanceCreateInfo, nullptr, &this->vkInstance) !=
+		VK_SUCCESS) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+					 "Failed to create Vulkan instance\n");
+		renderingService->backend = OPENGL;
+	}
 
-		const std::vector<GpuInformation> &availableGpuInformation =
-			this->getAvailableGpuInformation();
+	const std::vector<GpuInformation> &availableGpuInformation =
+		this->getAvailableGpuInformation();
 
-		std::for_each(
-			availableGpuInformation.begin(), availableGpuInformation.end(),
-			[&](const GpuInformation &gpuInfo) {
-				SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
-							"GPU [%i] %s, API version %i, VENDOR version %i\n",
-							gpuInfo.deviceId, gpuInfo.gpuName.c_str(),
-							gpuInfo.apiVersion, gpuInfo.vendorId);
-			});
-
-		// Create the specified vulkan surface and assign it to the current
-		// TenTrillion Instance.
-		if (!SDL_Vulkan_CreateSurface(renderingService->getWindowInstance(),
-									  this->vkInstance, nullptr,
-									  &this->vkSurfaceKhr)) {
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-						 "Failed to create VULKAN surface!");
-			exit(5);
-		}
-	});
+	std::for_each(
+		availableGpuInformation.begin(), availableGpuInformation.end(),
+		[&](const GpuInformation &gpuInfo) {
+			SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
+						"Vulkan GPU: %s, VERSION %s", gpuInfo.gpuName.c_str(),
+						gpuInfo.driverVersion.c_str());
+		});
+	// Create the specified vulkan surface and assign it to the current
+	// TenTrillion Instance.
+	if (!SDL_Vulkan_CreateSurface(renderingService->getWindowInstance(),
+								  this->vkInstance, nullptr,
+								  &this->vkSurfaceKhr)) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+					 "Failed to create VULKAN surface!");
+		exit(5);
+	}
 }

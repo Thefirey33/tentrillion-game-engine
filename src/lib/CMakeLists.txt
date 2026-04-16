@@ -12,6 +12,7 @@ set(SOURCE_FILES
 )
 
 find_package(Vulkan REQUIRED)
+find_package(OpenGL REQUIRED)
 
 add_library(${LIBRARY_NAME} SHARED ${SOURCE_FILES})
 generate_export_header(${LIBRARY_NAME} EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/tentrillion_export.h")
@@ -19,6 +20,7 @@ generate_export_header(${LIBRARY_NAME} EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/ten
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     target_compile_definitions(${LIBRARY_NAME} PRIVATE "$<$<CONFIG:Debug>:TENTRILLION_DEBUG_BUILD>")
 endif ()
+
 
 execute_process(
         COMMAND git rev-parse HEAD
@@ -40,13 +42,15 @@ target_include_directories(${LIBRARY_NAME} PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_link_libraries(${LIBRARY_NAME}
+target_link_libraries(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:SDL3::SDL3-shared>
         $<BUILD_INTERFACE:SDL3_image::SDL3_image-shared>
         $<BUILD_INTERFACE:SDL3_mixer::SDL3_mixer-shared>
         $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
         $<BUILD_INTERFACE:Vulkan::Vulkan>
+        $<BUILD_INTERFACE:OpenGL::GL>
 )
+
 
 install(TARGETS ${LIBRARY_NAME}
         EXPORT TenTrillionTargets

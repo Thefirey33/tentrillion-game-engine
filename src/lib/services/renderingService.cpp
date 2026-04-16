@@ -10,6 +10,8 @@
 #include "tentrillion.hpp"
 #include "tentrillionService.hpp"
 
+#include <cstdio>
+#include <iostream>
 #include <memory>
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_core.h>
@@ -60,24 +62,6 @@ void RenderingService::setRendererInstance(SDL_Renderer *m_rendererInstance) {
 
 SDL_Window *RenderingService::getWindowInstance() const {
 	return this->windowInstance;
-}
-
-void RenderingService::executeOnVulkanOnly(
-	const std::function<void()> &callback) const {
-	if (this->backend == VULKAN)
-		callback();
-}
-
-void RenderingService::executeOnOpenGlOnly(
-	const std::function<void()> &callback) const {
-	if (this->backend == OPENGL)
-		callback();
-}
-
-void RenderingService::executeOnSoftwareOnly(
-	const std::function<void()> &callback) const {
-	if (this->backend == SOFTWARE)
-		callback();
 }
 
 void RenderingService::quitService() { SDL_Quit(); }

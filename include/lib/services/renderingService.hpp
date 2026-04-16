@@ -45,26 +45,8 @@ class TENTRILLION_GAME_ENGINE_EXPORT RenderingService
 	 */
 	[[nodiscard]] SDL_Window *getWindowInstance() const;
 
-	/**
-	 * This executes the specified callback only on a VULKAN session.
-	 * @param callback The callback to execute on a VULKAN session only.
-	 */
-	void executeOnVulkanOnly(const std::function<void()> &callback) const;
-
 	[[nodiscard]] SDL_Renderer *getRendererInstance() const;
 	void setRendererInstance(SDL_Renderer *m_rendererInstance);
-
-	/**
-	 * This executes the specified callback only on OpenGL.
-	 * @param callback The callback to execute on an OPENGL session.
-	 */
-	void executeOnOpenGlOnly(const std::function<void()> &callback) const;
-
-	/**
-	 * This executes the specified callback only on SOFTWARE.
-	 * @param callback The callback to execute on a SOFTWARE session.
-	 */
-	void executeOnSoftwareOnly(const std::function<void()> &callback) const;
 
 	/**
 	 * This returns the window size of the current window.

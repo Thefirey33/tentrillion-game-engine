@@ -10,6 +10,7 @@ TenTrillionGameEngine::SoftwareBackendManager::SoftwareBackendManager(
 
 	currentRenderingSurface =
 		SDL_GetWindowSurface(renderingService->getWindowInstance());
+
 	renderingService->setRendererInstance(
 		SDL_CreateSoftwareRenderer(currentRenderingSurface));
 }
