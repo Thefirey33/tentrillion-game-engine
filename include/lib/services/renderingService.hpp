@@ -3,7 +3,9 @@
 
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
+#ifdef TENTRILLION_DEFAULT_RUNTIME
 #include "backends/vulkanBackendManagerService.hpp"
+#endif
 #include "math/vectorMath.hpp"
 #include "tentrillionService.hpp"
 
