@@ -1,5 +1,5 @@
-
 ![ten-trillion-logo](readme_sources/ten-trillion-logo.png)
+
 # TEN-TRILLION GAME ENGINE
 
 This game engine is a custom specialized game engine for extensive moddability and customizing of games.
@@ -20,7 +20,7 @@ This project uses SDL3, SDL Image, SDL Mixer for it's runtime. Along with:
 - CMake 3.10.0
 - C++ 17 (for Windows users, install Visual Studio 2017 or 2019 at minimum.)
 - Git
-- Vulkan SDK
+- Vulkan and OpenGL SDK
 - Qt 6
 - SDL3, SDL3 Mixer, SDL3 Image
 
@@ -33,6 +33,11 @@ Firstly, you need to register all the libraries / submodules in `libs/`. They ar
 Vulkan is a needed dependency for the TenTrillion Game Engine, as the engine uses it to render it's graphics if your
 system supports it. On Windows, please go to the [Vulkan Website](https://vulkan.lunarg.com/doc/sdk) and retrieve the
 Vulkan SDK. Do not forget, ensure that the `VULKAN_SDK` path has been set correctly!
+
+### OpenGL Installation
+
+OpenGL is a needed dependency for the TenTrillion Game Engine. This is the fallback API that the TenTrillion will use if
+Vulkan is not available.
 
 ### Qt Installation
 
