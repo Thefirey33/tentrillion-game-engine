@@ -45,6 +45,9 @@ jobs:
             c_compiler: cl
 
     steps:
+      - uses: actions/checkout@master
+      - uses: seanmiddleditch/gha-setup-ninja@master
+
       - if: runner.os == 'macOS'
         name: Set up Homebrew
         id: set-up-homebrew
@@ -109,6 +112,7 @@ jobs:
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -S ${{ github.workspace }}
+          -G Ninja
 
       - name: Build
         run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
@@ -144,6 +148,9 @@ jobs:
           - os: windows-latest
             c_compiler: clang
     steps:
+      - uses: actions/checkout@master
+      - uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -172,6 +179,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCOMPATIBILITY_MODE=ON
           -S ${{ github.workspace }}
+          -G Ninja
 
       - name: Build
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
