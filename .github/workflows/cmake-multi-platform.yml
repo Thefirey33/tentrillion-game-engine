@@ -156,7 +156,6 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Set up MSVC
-        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install Qt
