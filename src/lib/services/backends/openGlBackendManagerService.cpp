@@ -6,7 +6,6 @@
 #include "renderingService.hpp"
 
 #include <algorithm>
-#include <sstream>
 
 TenTrillionGameEngine::OpenGlBackendManagerService::OpenGlBackendManagerService(
 	RenderingService *renderingService, TentrillionEngine *tenTrillionEngine)

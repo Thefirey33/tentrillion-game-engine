@@ -4,8 +4,6 @@
 #define TEN_TRILLION_RENDERINGBACKEND_HPP
 #include "SDL3/SDL_surface.h"
 #include "tentrillionService.hpp"
-
-#include <cstdint>
 #include <vector>
 
 namespace TenTrillionGameEngine {

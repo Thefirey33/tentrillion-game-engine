@@ -11,7 +11,10 @@ set(SOURCE_FILES
         math/vectorMath.cpp
 )
 
-find_package(Vulkan REQUIRED)
+if(NOT COMPATIBILITY_MODE)
+        find_package(Vulkan REQUIRED)
+endif(NOT COMPATIBILITY_MODE)
+
 find_package(OpenGL REQUIRED)
 
 add_library(${LIBRARY_NAME} SHARED ${SOURCE_FILES})
@@ -21,18 +24,7 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     target_compile_definitions(${LIBRARY_NAME} PRIVATE "$<$<CONFIG:Debug>:TENTRILLION_DEBUG_BUILD>")
 endif ()
 
-
-execute_process(
-        COMMAND git rev-parse HEAD
-        OUTPUT_VARIABLE GIT_COMMIT_HASH
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-target_compile_definitions(
-        ${LIBRARY_NAME}
-        PUBLIC
-        "TENTRILLION_BUILD_VERSION=\"${GIT_COMMIT_HASH}\""
-)
+target_compile_definitions(${LIBRARY_NAME} PUBLIC "$<$<NOT:$<BOOL:${COMPATIBILITY_MODE}>>:TENTRILLION_DEFAULT_RUNTIME>")
 
 target_include_directories(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
@@ -47,7 +39,7 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:SDL3_image::SDL3_image-shared>
         $<BUILD_INTERFACE:SDL3_mixer::SDL3_mixer-shared>
         $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
-        $<BUILD_INTERFACE:Vulkan::Vulkan>
+        $<$<NOT:$<BOOL:${COMPATIBILITY_MODE}>>:$<BUILD_INTERFACE:Vulkan::Vulkan>>
         $<BUILD_INTERFACE:OpenGL::GL>
 )
 

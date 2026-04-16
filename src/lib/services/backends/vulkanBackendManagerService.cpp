@@ -1,3 +1,5 @@
+#ifdef TENTRILLION_DEFAULT_RUNTIME
+
 #include "backends/vulkanBackendManagerService.hpp"
 
 #include "SDL3/SDL_log.h"
@@ -5,7 +7,6 @@
 #include "services/renderingService.hpp"
 
 #include <algorithm>
-#include <iostream>
 #include <vulkan/vulkan_core.h>
 
 TenTrillionGameEngine::VulkanBackendManagerService::VulkanBackendManagerService(
@@ -96,3 +97,4 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 		exit(5);
 	}
 }
+#endif

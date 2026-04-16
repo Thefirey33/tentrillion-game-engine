@@ -26,8 +26,13 @@ void TentrillionEngine::initializeInstance(Vector windowSize,
 }
 
 void TentrillionEngine::displayTenTrillionInformation() {
-	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "TenTrillion Build: %s\n",
-				TENTRILLION_BUILD_VERSION);
+#ifdef TENTRILLION_DEFAULT_RUNTIME
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
+				"TenTrillion, Made by Thefirey33");
+#else
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
+				"TenTrillion Compatibility for older Platforms");
+#endif
 }
 
 void TentrillionEngine::exitInstance() { SDL_Quit(); }

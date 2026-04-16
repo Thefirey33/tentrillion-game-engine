@@ -1,12 +1,10 @@
-# Due to Qt5, not really supporting ARM based systems, we gotta do this solution.
-
-set(QT_LINKER_FLAGS Qt5::Core Qt5::Widgets)
-set(QT_VERSION Qt5)
-
-if (APPLE)
+if(COMPATIBILITY_MODE)
+    set(QT_LINKER_FLAGS Qt5::Core Qt5::Widgets)
+    set(QT_VERSION Qt5)
+else()
     set(QT_LINKER_FLAGS Qt6::Core Qt6::Widgets)
     set(QT_VERSION Qt6)
-endif ()
+endif()
 
 find_package(${QT_VERSION} REQUIRED COMPONENTS Widgets Core)
 find_program(WINDEPLOYQT_EXECUTABLE windeployqt)
