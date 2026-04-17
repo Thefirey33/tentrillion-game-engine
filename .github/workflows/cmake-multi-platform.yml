@@ -45,6 +45,13 @@ jobs:
             c_compiler: cl
 
     steps:
+      - name: Ninja Setup
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - if: runner.os == 'macOS'
         name: Set up Homebrew
         id: set-up-homebrew
@@ -144,6 +151,12 @@ jobs:
           - os: windows-latest
             c_compiler: clang
     steps:
+      - name: Ninja Setup
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
