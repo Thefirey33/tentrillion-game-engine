@@ -16,10 +16,11 @@ if(COMPATIBILITY_MODE)
     message("ATTENTION: The TenTrillion is now being built in COMPATIBILITY mode. This means, that the library will only build for OpenGL platforms.")
 endif(COMPATIBILITY_MODE)
 
-file(GLOB LIBRARIES LIST_DIRECTORIES true RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "libs/*")
+file(GLOB LIBRARIES LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} "libs/*")
+
 foreach (dir ${LIBRARIES})
     message("ADDING LIBRARY: " ${dir})
-    add_subdirectory(${dir})
+    add_subdirectory(${dir} EXCLUDE_FROM_ALL)
 endforeach (dir ${LIBRARIES})
 
 include(GenerateExportHeader)
@@ -30,6 +31,7 @@ include(CMakePackageConfigHelpers)
 add_subdirectory(src/lib)
 add_subdirectory(src/editor)
 
-# TenTrillion TenTEST Utility.
+# TenTrillion TenTEST Utility. This utility is used for testing the TenTrillion.
+
 add_executable(${TESTING_EXECUTABLE} src/test/main.cpp)
-target_link_libraries(${TESTING_EXECUTABLE} ${LIBRARY_NAME})
+target_link_libraries(${TESTING_EXECUTABLE} PUBLIC ${LIBRARY_NAME})
