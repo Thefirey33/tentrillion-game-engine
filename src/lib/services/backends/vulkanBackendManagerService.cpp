@@ -5,6 +5,7 @@
 #include "SDL3/SDL_log.h"
 #include "SDL3/SDL_vulkan.h"
 #include "services/renderingService.hpp"
+#include <SDL3/SDL.h>
 
 #include <algorithm>
 #include <vulkan/vulkan_core.h>
@@ -87,8 +88,6 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 						"Vulkan GPU: %s, VERSION %s", gpuInfo.gpuName.c_str(),
 						gpuInfo.driverVersion.c_str());
 		});
-	// Create the specified vulkan surface and assign it to the current
-	// TenTrillion Instance.
 	if (!SDL_Vulkan_CreateSurface(renderingService->getWindowInstance(),
 								  this->vkInstance, nullptr,
 								  &this->vkSurfaceKhr)) {

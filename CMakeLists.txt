@@ -10,7 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
-
+option(COMPATIBILITY_MODE "If the TenTrillion should export for older platforms." OFF)
 
 if(COMPATIBILITY_MODE)
     message("ATTENTION: The TenTrillion is now being built in COMPATIBILITY mode. This means, that the library will only build for OpenGL platforms.")
