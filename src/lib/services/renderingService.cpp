@@ -2,16 +2,14 @@
 
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_video.h"
+#include "SDL3/SDL_vulkan.h"
 #include "backends/openGlBackendManagerService.hpp"
 #include "backends/softwareBackendManager.hpp"
-#ifdef TENTRILLION_DEFAULT_RUNTIME
-#include "SDL3/SDL_vulkan.h"
 #include "backends/vulkanBackendManagerService.hpp"
-#include <vulkan/vulkan.h>
-#include <vulkan/vulkan_core.h>
-#endif
 #include "tentrillion.hpp"
 #include "tentrillionService.hpp"
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 #include <memory>
 
@@ -21,14 +19,9 @@ RenderingService::RenderingService(const Vector windowSize,
 								   TentrillionEngine *engine)
 	: TenTrillionService("WindowService", engine) {
 	this->windowSize = windowSize;
-
-#ifdef TENTRILLION_DEFAULT_RUNTIME
 	backend = SDL_Vulkan_LoadLibrary(nullptr) ? VULKAN
 			  : SDL_GL_LoadLibrary(nullptr)	  ? OPENGL
 											  : SOFTWARE;
-#else
-	backend = SDL_GL_LoadLibrary(NULL) ? OPENGL : SOFTWARE;
-#endif
 
 	this->windowInstance =
 		SDL_CreateWindow(windowTitle, this->windowSize.x, this->windowSize.z,
@@ -38,19 +31,17 @@ RenderingService::RenderingService(const Vector windowSize,
 
 	// Create the specified backend for the engine to use.
 	switch (backend) {
-#ifdef TENTRILLION_DEFAULT_RUNTIME
 	case VULKAN:
-		this->renderingBackendService =
-			std::make_unique<VulkanBackendManagerService>(this, engine);
+		this->renderingBackendService = std::unique_ptr<TenTrillionService>(
+			new VulkanBackendManagerService(this, engine));
 		break;
-#endif
 	case OPENGL:
-		this->renderingBackendService =
-			std::make_unique<OpenGlBackendManagerService>(this, engine);
+		this->renderingBackendService = std::unique_ptr<TenTrillionService>(
+			new OpenGlBackendManagerService(this, engine));
 		break;
 	case SOFTWARE:
-		this->renderingBackendService =
-			std::make_unique<SoftwareBackendManager>(this, engine);
+		this->renderingBackendService = std::unique_ptr<TenTrillionService>(
+			new SoftwareBackendManager(this, engine));
 		break;
 	}
 }

@@ -54,7 +54,7 @@ class TENTRILLION_GAME_ENGINE_EXPORT TentrillionEngine {
 	/**
 	 * This exits the TenTrillion Instance.
 	 */
-	void exitInstance();
+	void exitInstance() const;
 };
 } // namespace TenTrillionGameEngine
 #endif // !TENTRILLIONGAMEENGINE_TENTRILLION_H

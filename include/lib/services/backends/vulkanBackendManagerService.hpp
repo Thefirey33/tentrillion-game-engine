@@ -1,4 +1,3 @@
-#ifdef TENTRILLION_DEFAULT_RUNTIME
 #ifndef TEN_TRILLION_VULKANBACKENDMANAGERSERVICE_H
 #define TEN_TRILLION_VULKANBACKENDMANAGERSERVICE_H
 #include "SDL3/SDL_vulkan.h"
@@ -50,8 +49,12 @@ class TENTRILLION_GAME_ENGINE_EXPORT VulkanBackendManagerService
 	 * @return GPU Information.
 	 */
 	std::vector<GpuInformation> getAvailableGpuInformation() override;
+
+	/**
+	 * @brief This quits the current Vulkan Instance.
+	 */
+	void quitService() override;
 };
 }; // namespace TenTrillionGameEngine
 
 #endif // TEN_TRILLION_VULKANBACKENDMANAGERSERVICE_H
-#endif

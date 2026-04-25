@@ -1,4 +1,4 @@
-#ifdef TENTRILLION_DEFAULT_RUNTIME
+#include <cstdlib>
 
 #include "backends/vulkanBackendManagerService.hpp"
 
@@ -59,8 +59,7 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 		SDL_LogWarn(
 			SDL_LOG_CATEGORY_APPLICATION,
 			"Attempted to recieve Instance Extensions, ENDED IN FAILURE!");
-		renderingService->backend = OPENGL;
-		return;
+		exit(1);
 	}
 
 	VkInstanceCreateInfo vkInstanceCreateInfo = {};
@@ -75,7 +74,7 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 		VK_SUCCESS) {
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
 					 "Failed to create Vulkan instance\n");
-		renderingService->backend = OPENGL;
+		exit(1);
 	}
 
 	const std::vector<GpuInformation> &availableGpuInformation =
@@ -93,7 +92,10 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 								  &this->vkSurfaceKhr)) {
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
 					 "Failed to create VULKAN surface!");
-		exit(5);
+		exit(1);
 	}
 }
-#endif
+
+void TenTrillionGameEngine::VulkanBackendManagerService::quitService() {
+	vkDestroyInstance(this->vkInstance, nullptr);
+}

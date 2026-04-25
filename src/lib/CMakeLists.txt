@@ -12,9 +12,9 @@ set(SOURCE_FILES
 )
 set(SDL_TEST OFF CACHE BOOL "Disable SDL test library" FORCE)
 
-if(NOT COMPATIBILITY_MODE)
-        find_package(Vulkan REQUIRED)
-endif(NOT COMPATIBILITY_MODE)
+if (NOT COMPATIBILITY_MODE)
+    find_package(Vulkan REQUIRED)
+endif (NOT COMPATIBILITY_MODE)
 
 find_package(OpenGL REQUIRED)
 add_library(${LIBRARY_NAME} SHARED ${SOURCE_FILES})
@@ -26,7 +26,6 @@ endif ()
 
 # CPack Support for allowing the library to be used by other projects.
 
-target_compile_definitions(${LIBRARY_NAME} PUBLIC "$<$<NOT:$<BOOL:${COMPATIBILITY_MODE}>>:TENTRILLION_DEFAULT_RUNTIME>")
 target_include_directories(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/lib/services>
