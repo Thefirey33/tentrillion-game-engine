@@ -16,7 +16,6 @@ class TENTRILLION_GAME_ENGINE_EXPORT OpenGlBackendManagerService
   public:
 	explicit OpenGlBackendManagerService(RenderingService *renderingService,
 										 TentrillionEngine *tenTrillionEngine);
-	std::vector<GpuInformation> getAvailableGpuInformation() override;
 };
 } // namespace TenTrillionGameEngine
 

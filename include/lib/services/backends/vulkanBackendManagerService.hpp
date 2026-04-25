@@ -5,6 +5,7 @@
 #include "tentrillionService.hpp"
 
 #include <vector>
+#include <vulkan/vulkan.h>
 
 namespace TenTrillionGameEngine {
 
@@ -26,6 +27,18 @@ class TENTRILLION_GAME_ENGINE_EXPORT VulkanBackendManagerService
 	 */
 	VkSurfaceKHR vkSurfaceKhr{};
 
+	/**
+	 * The Physical Device of the VULKAN instance.
+	 */
+	VkPhysicalDevice vkPhysicalDevice{};
+
+	/**
+	 * Current VULKAN device of the TenTrillion.
+	 */
+	VkDevice vkDevice{};
+	VkQueue graphicsQueue{};
+	VkQueue presentQueue{};
+
   public:
 	/**
 	 * Get the current Vulkan Instance.
@@ -44,11 +57,16 @@ class TENTRILLION_GAME_ENGINE_EXPORT VulkanBackendManagerService
 	 */
 	explicit VulkanBackendManagerService(RenderingService *renderingService,
 										 TentrillionEngine *engine);
+
 	/**
-	 * This returns the current available GPU information from VULKAN.
-	 * @return GPU Information.
+	 * Create the VULKAN instance.
 	 */
-	std::vector<GpuInformation> getAvailableGpuInformation() override;
+	void createVkInstance();
+
+	/**
+	 * Create the VULKAN device responsible for the rendering.
+	 */
+	void createVkDevice();
 
 	/**
 	 * @brief This quits the current Vulkan Instance.

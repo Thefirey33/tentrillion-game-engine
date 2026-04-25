@@ -24,14 +24,3 @@ TenTrillionGameEngine::OpenGlBackendManagerService::OpenGlBackendManagerService(
 						gpuInfo.driverVersion.c_str());
 		});
 }
-
-std::vector<TenTrillionGameEngine::GpuInformation> TenTrillionGameEngine::
-	OpenGlBackendManagerService::getAvailableGpuInformation() {
-	const GLubyte *glVendor = glGetString(GL_VENDOR);
-	const GLubyte *glRenderer = glGetString(GL_RENDERER);
-	const GLubyte *glVersion = glGetString(GL_VERSION);
-	char buffer[256];
-	sprintf(buffer, "%s %s", reinterpret_cast<const char *>(glVendor),
-			reinterpret_cast<const char *>(glRenderer));
-	return {{buffer, reinterpret_cast<const char *>(glVersion)}};
-}

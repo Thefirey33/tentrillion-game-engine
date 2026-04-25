@@ -23,11 +23,9 @@ RenderingService::RenderingService(const Vector windowSize,
 			  : SDL_GL_LoadLibrary(nullptr)	  ? OPENGL
 											  : SOFTWARE;
 
-	this->windowInstance =
-		SDL_CreateWindow(windowTitle, this->windowSize.x, this->windowSize.z,
-						 backend			 ? SDL_WINDOW_VULKAN
-						 : backend == OPENGL ? SDL_WINDOW_OPENGL
-											 : 0);
+	this->windowInstance = SDL_CreateWindow(
+		windowTitle, this->windowSize.x, this->windowSize.z,
+		backend == VULKAN ? SDL_WINDOW_VULKAN : SDL_WINDOW_OPENGL);
 
 	// Create the specified backend for the engine to use.
 	switch (backend) {

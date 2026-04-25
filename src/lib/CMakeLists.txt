@@ -12,20 +12,10 @@ set(SOURCE_FILES
 )
 set(SDL_TEST OFF CACHE BOOL "Disable SDL test library" FORCE)
 
-if (NOT COMPATIBILITY_MODE)
-    find_package(Vulkan REQUIRED)
-endif (NOT COMPATIBILITY_MODE)
-
+find_package(Vulkan REQUIRED)
 find_package(OpenGL REQUIRED)
+
 add_library(${LIBRARY_NAME} SHARED ${SOURCE_FILES})
-generate_export_header(${LIBRARY_NAME} EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/tentrillion_export.h")
-
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    target_compile_definitions(${LIBRARY_NAME} PRIVATE "$<$<CONFIG:Debug>:TENTRILLION_DEBUG_BUILD>")
-endif ()
-
-# CPack Support for allowing the library to be used by other projects.
-
 target_include_directories(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/lib/services>
@@ -38,9 +28,10 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:SDL3_image::SDL3_image>
         $<BUILD_INTERFACE:SDL3_mixer::SDL3_mixer>
         $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
-        $<$<NOT:$<BOOL:${COMPATIBILITY_MODE}>>:$<BUILD_INTERFACE:Vulkan::Vulkan>>
+        $<BUILD_INTERFACE:Vulkan::Vulkan>
         $<BUILD_INTERFACE:OpenGL::GL>
 )
+generate_export_header(${LIBRARY_NAME} EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/tentrillion_export.h")
 install(TARGETS ${LIBRARY_NAME}
         EXPORT TenTrillionTargets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

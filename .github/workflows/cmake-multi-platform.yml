@@ -9,16 +9,90 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  build-windows:
+    runs-on: windows-latest
 
     strategy:
       fail-fast: false
 
       matrix:
-        os: [ ubuntu-latest, macOS-14, windows-latest ]
+        os: [ windows-latest ]
         build_type: [ Debug ]
-        c_compiler: [ gcc, clang, cl ]
+        c_compiler: [ cl ]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+    steps:
+      - name: Ninja Setup
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          cache: true
+
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Vulkan SDK
+        uses: jakoch/install-vulkan-sdk-action@v1
+        with:
+          optional_components: com.lunarg.vulkan.vma
+          install_runtime: true
+          cache: true
+          stripdown: true
+          install_swiftshader: true
+          install_lavapipe: true
+
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -S ${{ github.workspace }}
+          -G Ninja
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: ctest --build-config ${{ matrix.build_type }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows
+          path: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}
+          retention-days: 5
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        build_type: [ Debug ]
+        c_compiler: [ gcc, clang ]
         include:
           - os: ubuntu-latest
             c_compiler: gcc
@@ -26,55 +100,15 @@ jobs:
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
-          - os: macOS-14
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
         exclude:
-          - os: macOS-14
-            c_compiler: clang
-          - os: windows-latest
-            c_compiler: gcc
-          - os: windows-latest
-            c_compiler: clang
           - os: ubuntu-latest
-            c_compiler: cl
-          - os: macOS-14
             c_compiler: cl
 
     steps:
-      - name: Ninja Setup
-        uses: seanmiddleditch/gha-setup-ninja@master
-
-      - name: Set up MSVC
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
-
-      - if: runner.os == 'macOS'
-        name: Set up Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
-
-      - if: runner.os == 'macOS'
-        name: Install Qt for MacOS only, for ARM64 support
+      - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           cache: true
-
-      - if: runner.os != 'macOS'
-        name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          cache: true
-
-      - name: Install Compilers on macOS
-        if: runner.os == 'macOS'
-        run: |
-          brew update
-          brew install llvm
-          brew reinstall gcc
 
       - name: Checkout repository and submodules
         uses: actions/checkout@v4
@@ -116,7 +150,6 @@ jobs:
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -S ${{ github.workspace }}
-          -G Ninja
 
       - name: Build
         run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
@@ -128,6 +161,82 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ runner.os }}-${{ matrix.c_compiler }}-${{ matrix.build_type }}
+          name: Linux
           path: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}
-          retention-days: 2
+          retention-days: 5
+
+  build-macos:
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ macos-latest ]
+        build_type: [ Debug ]
+        c_compiler: [ gcc ]
+        include:
+          - os: macos-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+        exclude:
+          - os: macos-latest
+            c_compiler: clang
+          - os: macos-latest
+            c_compiler: cl
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@main
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          cache: true
+
+      - name: Install Compilers on macOS
+        run: |
+          brew update
+          brew reinstall gcc
+
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Vulkan SDK
+        uses: jakoch/install-vulkan-sdk-action@v1
+        with:
+          optional_components: com.lunarg.vulkan.vma
+          install_runtime: true
+          cache: true
+          stripdown: true
+          install_swiftshader: true
+          install_lavapipe: true
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -S ${{ github.workspace }}
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: ctest --build-config ${{ matrix.build_type }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacOS
+          path: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}
+          retention-days: 5

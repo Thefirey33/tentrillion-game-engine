@@ -8,6 +8,8 @@
 #include <SDL3/SDL.h>
 
 #include <algorithm>
+#include <iostream>
+#include <ostream>
 #include <vulkan/vulkan_core.h>
 
 TenTrillionGameEngine::VulkanBackendManagerService::VulkanBackendManagerService(
@@ -26,32 +28,7 @@ TenTrillionGameEngine::VulkanBackendManagerService::getVkInstance() {
 	return this->vkInstance;
 }
 
-std::vector<TenTrillionGameEngine::GpuInformation> TenTrillionGameEngine::
-	VulkanBackendManagerService::getAvailableGpuInformation() {
-	std::vector<GpuInformation> availableGpuInformation = {};
-	uint32_t physicalDeviceCount = 0;
-	vkEnumeratePhysicalDevices(this->vkInstance, &physicalDeviceCount, nullptr);
-	std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
-	vkEnumeratePhysicalDevices(this->vkInstance, &physicalDeviceCount,
-							   physicalDevices.data());
-	// Retrieve the current GPU information by querying the information provided
-	// by vulkan.
-	std::for_each(
-		physicalDevices.begin(), physicalDevices.end(),
-		[&](const VkPhysicalDevice &device) {
-			VkPhysicalDeviceProperties physicalDeviceProperties;
-			vkGetPhysicalDeviceProperties(device, &physicalDeviceProperties);
-			availableGpuInformation.push_back(
-				{physicalDeviceProperties.deviceName,
-				 std::to_string(physicalDeviceProperties.driverVersion)});
-		});
-
-	return availableGpuInformation;
-}
-
-void TenTrillionGameEngine::VulkanBackendManagerService::
-	refreshVulkanInstance() {
-
+void TenTrillionGameEngine::VulkanBackendManagerService::createVkInstance() {
 	const char *const *vkInstanceExtensions =
 		SDL_Vulkan_GetInstanceExtensions(&this->vkInstanceExtensionsCount);
 
@@ -67,9 +44,6 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 	vkInstanceCreateInfo.enabledExtensionCount =
 		this->vkInstanceExtensionsCount;
 	vkInstanceCreateInfo.ppEnabledExtensionNames = vkInstanceExtensions;
-
-	// Attempt to create a vulkan instance, if failure, report the error to
-	// the user and force switch back to the OpenGL runtime.
 	if (vkCreateInstance(&vkInstanceCreateInfo, nullptr, &this->vkInstance) !=
 		VK_SUCCESS) {
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
@@ -77,25 +51,88 @@ void TenTrillionGameEngine::VulkanBackendManagerService::
 		exit(1);
 	}
 
-	const std::vector<GpuInformation> &availableGpuInformation =
-		this->getAvailableGpuInformation();
+	uint32_t physicalDeviceCount = 0;
+	vkEnumeratePhysicalDevices(this->vkInstance, &physicalDeviceCount, nullptr);
+	std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
+	vkEnumeratePhysicalDevices(this->vkInstance, &physicalDeviceCount,
+							   physicalDevices.data());
 
-	std::for_each(
-		availableGpuInformation.begin(), availableGpuInformation.end(),
-		[&](const GpuInformation &gpuInfo) {
-			SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
-						"Vulkan GPU: %s, VERSION %s", gpuInfo.gpuName.c_str(),
-						gpuInfo.driverVersion.c_str());
-		});
-	if (!SDL_Vulkan_CreateSurface(renderingService->getWindowInstance(),
+	this->vkPhysicalDevice = physicalDevices[0];
+}
+
+void TenTrillionGameEngine::VulkanBackendManagerService::createVkDevice() {
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(this->vkPhysicalDevice,
+											 &queueFamilyCount, nullptr);
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(
+		this->vkPhysicalDevice, &queueFamilyCount, queueFamilies.data());
+
+	uint32_t graphicsQueueFamilyIndex{UINT32_MAX};
+	uint32_t presentQueueFamilyIndex{UINT32_MAX};
+	VkBool32 supportsGraphicsQueue{false};
+	uint32_t i{0};
+
+	for (const VkQueueFamilyProperties queueFamily : queueFamilies) {
+		if (graphicsQueueFamilyIndex == UINT32_MAX &&
+			queueFamily.queueCount > 0 &&
+			queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+			graphicsQueueFamilyIndex = i;
+
+		if (presentQueueFamilyIndex == UINT32_MAX)
+			vkGetPhysicalDeviceSurfaceSupportKHR(this->vkPhysicalDevice, i,
+												 this->vkSurfaceKhr,
+												 &supportsGraphicsQueue);
+		if (supportsGraphicsQueue)
+			presentQueueFamilyIndex = i;
+		++i;
+	}
+	float queuePriority{1.0f};
+	VkDeviceQueueCreateInfo vkDeviceQueueCreateInfo = {
+		VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+		nullptr,
+		0,
+		graphicsQueueFamilyIndex,
+		1,
+		&queuePriority};
+
+	VkPhysicalDeviceFeatures deviceFeatures = {};
+	const char *deviceExtensionNames[] = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+	const VkDeviceCreateInfo deviceCreateInfo = {
+		VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+		nullptr,
+		0,
+		1,
+		&vkDeviceQueueCreateInfo,
+		0,
+		nullptr,
+		1,
+		deviceExtensionNames,
+		&deviceFeatures};
+
+	vkCreateDevice(this->vkPhysicalDevice, &deviceCreateInfo, nullptr,
+				   &this->vkDevice);
+}
+
+void TenTrillionGameEngine::VulkanBackendManagerService::
+	refreshVulkanInstance() {
+	this->createVkInstance();
+
+	if (!SDL_Vulkan_CreateSurface(this->renderingService->getWindowInstance(),
 								  this->vkInstance, nullptr,
 								  &this->vkSurfaceKhr)) {
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-					 "Failed to create VULKAN surface!");
+					 "Failed to create Vulkan surface");
 		exit(1);
 	}
+
+	this->createVkDevice();
 }
 
 void TenTrillionGameEngine::VulkanBackendManagerService::quitService() {
+	vkDestroyDevice(this->vkDevice, nullptr);
+	vkDestroySurfaceKHR(this->vkInstance, this->vkSurfaceKhr, nullptr);
 	vkDestroyInstance(this->vkInstance, nullptr);
+	SDL_Vulkan_UnloadLibrary();
 }
